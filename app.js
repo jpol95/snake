@@ -11,6 +11,7 @@ $(function(){
     let currentInterval;
     let tail = 2;
     let allPositions = [{}]
+    let score;
     generateSquare()
         $('html').keydown(function(e){
         let invalidDirection = Math.abs(currentDirection - e.keyCode) == 0 || Math.abs(currentDirection - e.keyCode) == 2
@@ -48,6 +49,7 @@ let i = 0
         i++
     }
     )
+score = allPositions.length
 }
 
 function collisionDetection(){
@@ -102,39 +104,39 @@ function generateSquare(){
 }
 
 function moveLeft(){
-    if (square.position().left >= 10){
     currentDirection = left
     square.offset({left: square.position().left - 10})
     moveChildren()
+    checkLoss()
 
-    }
+    
 }
 
 function moveRight(){
-    if (square.position().left < width - 10){
     currentDirection = right
     square.offset({left: square.position().left + 10})
     moveChildren()
+    checkLoss()
 
-    }
+    
 }
 
 function moveDown(){
-    if (square.position().top < height - 10){
     currentDirection = down
     square.offset({top: square.position().top + 10})
     moveChildren()
+    checkLoss()
 
-    }
+    
 }
 
 function moveUp(){
-    if (square.position().top >= 10){
     currentDirection = up
     square.offset({top: square.position().top - 10})
     moveChildren()
+    checkLoss()
 
-}
+
 }
 
 function move(direct){
@@ -150,6 +152,33 @@ function move(direct){
         return setInterval(moveDown, 50)
     }
 
+}
+
+function checkLoss(){
+    // console.log(outOfBounds())
+    // console.log(selfCollision())
+    if (outOfBounds() || selfCollision()){
+    square.stop()
+    $('.square').each(function(){
+        $(this).remove()
+    })
+}
+}
+function outOfBounds(){
+    return allPositions[0].left > width - 10 || allPositions[0].left < 0 || allPositions[0].top > height - 10 || allPositions[0].top < 0
+}
+
+function selfCollision(){
+    // let i = 0
+    // for (let pos of allPositions){
+    //     if (i >= 1){
+    //     if (Math.abs(square.position().left - pos.left) < 10) return true
+    //     if (Math.abs(square.position().top - pos.top) < 10 ) return true
+    //     }
+    //     i++
+    // }
+return false
+ 
 }
 
 })
