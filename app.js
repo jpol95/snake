@@ -64,18 +64,19 @@ function newSquare(){
     if (collisionDetection()){
        $('.food').remove()
        generateSquare()
+       for (let i = 0; i < 4; i++)
        extendLength()
        
 }
 }
 
 function extendLength(){
-    let leftPos = square.position().left
-    let topPos = square.position().top
+    let leftPos = $('.contain :last-child').position().left
+    let topPos = $('.contain :last-child').position().top
     let newSquare = `<div class='square' id=n${tail}></div>`
     console.log(leftPos)
     $('.contain').append(newSquare)
-    $(`#n${tail}`).offset({left: leftPos - 10, top: topPos - 10})
+    $(`#n${tail}`).offset({left: leftPos, top: topPos})
     allPositions.push($('.contain :last-child').position())
     tail++
 }
@@ -104,7 +105,6 @@ function moveLeft(){
     if (square.position().left >= 10){
     currentDirection = left
     square.offset({left: square.position().left - 10})
-    allPositions[0] = square.position()
     moveChildren()
 
     }
@@ -114,7 +114,6 @@ function moveRight(){
     if (square.position().left < width - 10){
     currentDirection = right
     square.offset({left: square.position().left + 10})
-    allPositions[0] = square.position()
     moveChildren()
 
     }
@@ -124,7 +123,6 @@ function moveDown(){
     if (square.position().top < height - 10){
     currentDirection = down
     square.offset({top: square.position().top + 10})
-    allPositions[0] = square.position()
     moveChildren()
 
     }
@@ -134,7 +132,6 @@ function moveUp(){
     if (square.position().top >= 10){
     currentDirection = up
     square.offset({top: square.position().top - 10})
-    allPositions[0] = square.position()
     moveChildren()
 
 }
