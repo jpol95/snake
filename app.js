@@ -25,19 +25,11 @@ function moveChildren(){
     $('.square').each(function(){
     let previousId = $(this).attr('id').substring(1) - 1
     if (previousId >= 1){
-  //  console.log($(this).attr('id'))
-  //  let previousPosition = $(this).siblings(`#n${previousId}`).position()
     $(this).offset({left: allPositions[previousId - 1].left, top: allPositions[previousId - 1].top})
     }
-}
-
-)
+})
 updatePosition()
 }
-
-setInterval(function(){
-    console.log(allPositions[1].left)
-}, 1000)
 
 setInterval(newSquare, 1)
 
@@ -76,7 +68,6 @@ function extendLength(){
     let leftPos = $('.contain :last-child').position().left
     let topPos = $('.contain :last-child').position().top
     let newSquare = `<div class='square' id=n${tail}></div>`
-    console.log(leftPos)
     $('.contain').append(newSquare)
     $(`#n${tail}`).offset({left: leftPos, top: topPos})
     allPositions.push($('.contain :last-child').position())
@@ -155,8 +146,6 @@ function move(direct){
 }
 
 function checkLoss(){
-    // console.log(outOfBounds())
-    // console.log(selfCollision())
     if (outOfBounds() || selfCollision()){
     square.stop()
     $('.square').each(function(){
@@ -169,14 +158,13 @@ function outOfBounds(){
 }
 
 function selfCollision(){
-    // let i = 0
-    // for (let pos of allPositions){
-    //     if (i >= 1){
-    //     if (Math.abs(square.position().left - pos.left) < 10) return true
-    //     if (Math.abs(square.position().top - pos.top) < 10 ) return true
-    //     }
-    //     i++
-    // }
+    let i = 0
+    for (let pos of allPositions){
+        if (i >= 1){
+        if (Math.abs(square.position().left - pos.left) < 10 && Math.abs(square.position().top - pos.top) < 10 ) return true
+        }
+        i++
+    }
 return false
  
 }
