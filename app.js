@@ -1,8 +1,10 @@
 $(function(){
     let square = $(".square")
     let contain = $(".contain")
-    let width = contain.width()
-    let height = contain.height()
+    let leftmin = contain.position().left
+    let topmin = contain.position().top
+    let width =  contain.width() 
+    let height = contain.height() 
     let left = 37;
     let up = 38
     let right = 39
@@ -10,8 +12,9 @@ $(function(){
     let currentDirection;
     let currentInterval;
     let tail = 2;
-    let allPositions = [{}]
+    let allOffsets = [{left: leftmin, top: topmin}]
     let score;
+    let loseScreen = "<h2> Whoops! Looks like you're not very good. Care to try again?</h2"
     generateSquare()
         $('html').keydown(function(e){
         let invalidDirection = Math.abs(currentDirection - e.keyCode) == 0 || Math.abs(currentDirection - e.keyCode) == 2
@@ -25,7 +28,7 @@ function moveChildren(){
     $('.square').each(function(){
     let previousId = $(this).attr('id').substring(1) - 1
     if (previousId >= 1){
-    $(this).offset({left: allPositions[previousId - 1].left, top: allPositions[previousId - 1].top})
+    $(this).offset({left: allOffsets[previousId - 1].left, top: allOffsets[previousId - 1].top})
     }
 })
 updatePosition()
@@ -37,18 +40,18 @@ setInterval(newSquare, 1)
 function updatePosition(){ 
 let i = 0
     $('.square').each(function(){
-        allPositions[i] = $(this).position()
+        allOffsets[i] = $(this).offset()
         i++
     }
     )
-score = allPositions.length
+score = allOffsets.length
 }
 
 function collisionDetection(){
     let food = $('.food')
     let square = $('.square')
-    let horizontalDelta = Math.abs(food.position().left - square.position().left)
-    let verticalDelta = Math.abs(food.position().top - square.position().top)
+    let horizontalDelta = Math.abs(food.offset().left - square.offset().left)
+    let verticalDelta = Math.abs(food.offset().top - square.offset().top)
 
     if (horizontalDelta < 10 && verticalDelta < 10) return true;
     return false
@@ -65,12 +68,12 @@ function newSquare(){
 }
 
 function extendLength(){
-    let leftPos = $('.contain :last-child').position().left
-    let topPos = $('.contain :last-child').position().top
+    let leftPos = $('.contain :last-child').offset().left
+    let topPos = $('.contain :last-child').offset().top
     let newSquare = `<div class='square' id=n${tail}></div>`
     $('.contain').append(newSquare)
     $(`#n${tail}`).offset({left: leftPos, top: topPos})
-    allPositions.push($('.contain :last-child').position())
+    allOffsets.push($('.contain :last-child').offset())
     tail++
 }
 
@@ -82,13 +85,15 @@ function generateNumber(randNum){
 }
 
 function generateSquare(){
-    let randY = Math.random()*height - 5
-    let randX = Math.random()*width - 5
     let container = $('.contain')
+    let randY = Math.random()*height + topmin - 5
+    let randX = Math.random()*width + leftmin - 5
     let roundedX = generateNumber(randX)
     let roundedY=  generateNumber(randY)
     if (roundedX > 50) randY -=10
     if (roundedY > 50) randX -=10
+    console.log(roundedX)
+    console.log(roundedY)
     container.append("<div class='food'></div>")
     $(".food").offset({top: roundedY, left: roundedX})
 
@@ -96,16 +101,15 @@ function generateSquare(){
 
 function moveLeft(){
     currentDirection = left
-    square.offset({left: square.position().left - 10})
+    square.offset({left: square.offset().left - 10})
     moveChildren()
     checkLoss()
-
     
 }
 
 function moveRight(){
     currentDirection = right
-    square.offset({left: square.position().left + 10})
+    square.offset({left: square.offset().left + 10})
     moveChildren()
     checkLoss()
 
@@ -114,7 +118,7 @@ function moveRight(){
 
 function moveDown(){
     currentDirection = down
-    square.offset({top: square.position().top + 10})
+    square.offset({top: square.offset().top + 10})
     moveChildren()
     checkLoss()
 
@@ -123,7 +127,7 @@ function moveDown(){
 
 function moveUp(){
     currentDirection = up
-    square.offset({top: square.position().top - 10})
+    square.offset({top: square.offset().top - 10})
     moveChildren()
     checkLoss()
 
@@ -150,18 +154,23 @@ function checkLoss(){
     square.stop()
     $('.square').each(function(){
         $(this).remove()
+        $('.contain').html(loseScreen)
     })
 }
 }
 function outOfBounds(){
-    return allPositions[0].left > width - 10 || allPositions[0].left < 0 || allPositions[0].top > height - 10 || allPositions[0].top < 0
+    console.log(allOffsets[0].left)
+    // console.log(allPositions[0].left < leftmin)
+    console.log(allOffsets[0].top)
+    // console.log(allPositions[0].top)
+    return allOffsets[0].left >  leftmin + width - 10 || allOffsets[0].left < leftmin || allOffsets[0].top > topmin+ height - 10 || allOffsets[0].top < topmin
 }
 
 function selfCollision(){
     let i = 0
-    for (let pos of allPositions){
+    for (let pos of allOffsets){
         if (i >= 1){
-        if (Math.abs(square.position().left - pos.left) < 10 && Math.abs(square.position().top - pos.top) < 10 ) return true
+        if (Math.abs(square.offset().left - pos.left) < 10 && Math.abs(square.offset().top - pos.top) < 10 ) return true
         }
         i++
     }
@@ -169,4 +178,5 @@ return false
  
 }
 
-})
+}
+)

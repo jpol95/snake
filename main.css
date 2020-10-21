@@ -1,5 +1,6 @@
-.html, body{
+.html, body {
     margin: 0;
+    padding: 100px 540px
 }
 
 .square{
@@ -22,3 +23,14 @@
     height: 10px;
     position: absolute;
 }
+
+h2{
+    text-align: center;
+}
+
+/* .score {
+    border-style: solid;
+    border-color: green;
+    margin-bottom: 50px;
+    
+} */
