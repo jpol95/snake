@@ -13,7 +13,6 @@ $(function(){
     let currentInterval;
     let tail = 2;
     let allOffsets = [{left: leftmin, top: topmin}]
-    let score;
     let loseScreen = "<h2> Whoops! Looks like you're not very good. Care to try again?</h2"
     generateSquare()
         $('html').keydown(function(e){
@@ -44,7 +43,6 @@ let i = 0
         i++
     }
     )
-score = allOffsets.length
 }
 
 function collisionDetection(){
